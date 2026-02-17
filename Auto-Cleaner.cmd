@@ -48,4 +48,6 @@ PowerShell -NoProfile -Command "if ((Get-ChildItem 'C:\$Recycle.Bin' -Recurse -F
 echo.
 echo LIMPIEZA COMPLETADA - Tu pc mas rapido que la luz con Xlploit Optimizer.
 pause
+cls
 exit
+
