@@ -1,53 +1,65 @@
 @echo off
-title Xploit Optimizer - Ultimate Tweaks
-chcp 850 >nul
+title Xploit Optimizer - Ultimate Tweaks Edition
 color 9
+chcp 65001 >nul
 
-echo Limpiando cache DNS...
-ipconfig /flushdns
-
-echo Borrando archivos temporales del sistema...
-del /s /f /q "%TEMP%\*.*"
-del /s /f /q "%SystemRoot%\Temp\*.*"
-del /s /f /q "%USERPROFILE%\AppData\Local\Temp\*.*"
-
-echo Borrando Prefetch...
-del /s /f /q "C:\Windows\Prefetch\*.*"
-
-echo Borrando miniaturas y cache del explorador...
-del /f /s /q "%LOCALAPPDATA%\Microsoft\Windows\Explorer\thumbcache_*.db"
-
-echo Limpiando basura de Epic Games...
-rmdir /s /q "%LOCALAPPDATA%\EpicGamesLauncher\Saved"
-rmdir /s /q "%APPDATA%\Epic\*"
-rmdir /s /q "%PROGRAMDATA%\Epic\EpicGamesLauncher\DataCache"
-
-echo Limpiando basura de Fortnite...
-rmdir /s /q "%LOCALAPPDATA%\FortniteGame\Saved\Logs"
-rmdir /s /q "%LOCALAPPDATA%\FortniteGame\Saved\Crashes"
-rmdir /s /q "%LOCALAPPDATA%\FortniteGame\Saved\Config\CrashReportClient"
-
-echo Limpiando basura de Riot / Valorant...
-rmdir /s /q "%LOCALAPPDATA%\VALORANT\Saved\Logs"
-rmdir /s /q "%LOCALAPPDATA%\VALORANT\Saved\Crashes"
-rmdir /s /q "%LOCALAPPDATA%\VALORANT\Saved\Config"
-rmdir /s /q "%LOCALAPPDATA%\Riot Games\Riot Client\Cache"
-rmdir /s /q "%APPDATA%\Riot Games\RiotClientLogs"
-rmdir /s /q "%PROGRAMDATA%\Riot Games\Metadata"
-
-echo Limpiando restos de actualizaciones...
-del /s /f /q "%SystemRoot%\SoftwareDistribution\Download\*.*"
-
-echo Limpiando informes de errores de Windows...
-del /s /f /q "C:\ProgramData\Microsoft\Windows\WER\*.*"
-del /s /f /q "%LOCALAPPDATA%\Microsoft\Windows\WER\*.*"
-
-echo Vaciando papelera de reciclaje (si hay algo)...
-PowerShell -NoProfile -Command "if ((Get-ChildItem 'C:\$Recycle.Bin' -Recurse -Force | Measure-Object).Count -gt 0) { Clear-RecycleBin -Force }"
+:: ===== Verificar administrador =====
+net session >nul 2>&1
+if %errorlevel% neq 0 (
+    echo.
+    echo Ejecuta este archivo como ADMINISTRADOR.
+    pause
+    exit
+)
 
 echo.
-echo LIMPIEZA COMPLETADA - Tu pc mas rapido que la luz con Xlploit Optimizer.
-pause
-cls
-exit
+echo ===============================
+echo     Xploit Optimizer v2
+echo ===============================
+echo.
 
+:: ===== Limpiar DNS =====
+echo Limpiando cache DNS...
+ipconfig /flushdns >nul
+
+:: ===== Limpiar TEMP del usuario =====
+echo Limpiando archivos temporales del usuario...
+for /d %%x in ("%TEMP%\*") do rd /s /q "%%x" 2>nul
+del /f /q "%TEMP%\*.*" 2>nul
+
+:: ===== Limpiar TEMP del sistema =====
+echo Limpiando temporales del sistema...
+for /d %%x in ("%SystemRoot%\Temp\*") do rd /s /q "%%x" 2>nul
+del /f /q "%SystemRoot%\Temp\*.*" 2>nul
+
+:: ===== Limpiar cache de miniaturas =====
+echo Limpiando cache de miniaturas...
+taskkill /f /im explorer.exe >nul 2>&1
+del /f /q "%LOCALAPPDATA%\Microsoft\Windows\Explorer\thumbcache_*.db" 2>nul
+start explorer.exe
+
+:: ===== Epic Games =====
+echo Limpiando cache de Epic Games...
+rd /s /q "%LOCALAPPDATA%\EpicGamesLauncher\Saved" 2>nul
+rd /s /q "%PROGRAMDATA%\Epic\EpicGamesLauncher\DataCache" 2>nul
+
+:: ===== Fortnite =====
+echo Limpiando logs de Fortnite...
+rd /s /q "%LOCALAPPDATA%\FortniteGame\Saved\Logs" 2>nul
+rd /s /q "%LOCALAPPDATA%\FortniteGame\Saved\Crashes" 2>nul
+
+:: ===== Riot / Valorant =====
+echo Limpiando logs de Riot / Valorant...
+rd /s /q "%LOCALAPPDATA%\VALORANT\Saved\Logs" 2>nul
+rd /s /q "%LOCALAPPDATA%\VALORANT\Saved\Crashes" 2>nul
+rd /s /q "%LOCALAPPDATA%\Riot Games\Riot Client\Cache" 2>nul
+
+:: ===== Vaciar papelera =====
+echo Vaciando papelera...
+PowerShell -NoProfile -Command "Clear-RecycleBin -Force" >nul 2>&1
+
+echo.
+echo Limpieza completada correctamente.
+echo.
+pause
+exit
