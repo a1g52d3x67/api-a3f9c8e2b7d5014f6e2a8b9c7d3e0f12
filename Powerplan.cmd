@@ -43,7 +43,7 @@ powercfg -setactive SCHEME_CURRENT >nul 2>&1
 
 :: Cambiar nombre del plan activo
 echo Renombrando plan...
-powercfg -changename SCHEME_CURRENT "Xploit Optimizer (XPLT v1)" "Plan optimizado para máximo rendimiento gaming" >nul 2>&1
+powercfg -changename SCHEME_CURRENT "Xploit Optimizer (XPLT v1)" "Plan de energia de xploit optimizer (+FPS , 0-delay)" >nul 2>&1
 
 :: Mostrar configuración final
 echo.
