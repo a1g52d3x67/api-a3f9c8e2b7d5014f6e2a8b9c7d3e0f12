@@ -9,9 +9,20 @@ if %errorlevel% neq 0 (
     exit
 )
 
+echo === PLANES DISPONIBLES ANTES ===
+powercfg -list
+echo.
+pause
+
 :: Duplicar plan Ultimate Performance
 echo Duplicando plan Ultimate Performance...
-powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
+powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
+
+echo.
+echo === PLANES DESPUES DE DUPLICAR ===
+powercfg -list
+echo.
+pause
 
 :: Activar el plan duplicado (el nuevo plan pasa a ser SCHEME_CURRENT)
 powercfg -setactive SCHEME_MIN >nul 2>&1
@@ -53,6 +64,9 @@ echo ====================================
 echo.
 echo Plan activo actual:
 powercfg -getactivescheme
+echo.
+echo === TODOS LOS PLANES AHORA ===
+powercfg -list
 echo.
 echo Configuraciones aplicadas:
 powercfg /q SCHEME_CURRENT | find "Xploit"
