@@ -9,27 +9,21 @@ if %errorlevel% neq 0 (
     exit
 )
 
-echo === PLANES DISPONIBLES ANTES ===
-powercfg -list
-echo.
-pause
+:: Crear Ultimate Performance (duplicar)
+echo Creando plan Ultimate Performance...
+powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>&1
 
-:: Duplicar plan Ultimate Performance
-echo Duplicando plan Ultimate Performance...
-powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
+:: Activar el plan recién creado (pasa a ser SCHEME_CURRENT)
+powercfg -setactive SCHEME_CURRENT >nul 2>&1
 
-echo.
-echo === PLANES DESPUES DE DUPLICAR ===
-powercfg -list
-echo.
-pause
+:: Cambiar nombre del plan activo
+echo Renombrando plan...
+powercfg -changename SCHEME_CURRENT "Xploit Optimizer (XPLT v1)" "Plan optimizado para gaming (+FPS , 0-delay)" >nul 2>&1
 
-:: Activar el plan duplicado (el nuevo plan pasa a ser SCHEME_CURRENT)
-powercfg -setactive SCHEME_MIN >nul 2>&1
+:: Aplicar configuraciones de rendimiento
+echo Aplicando optimizaciones...
 
-echo Aplicando configuraciones de rendimiento...
-
-:: Configuraciones AC (conectado)
+:: AC (conectado)
 powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 5
 powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMAX 99
 powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTMODE 2
@@ -43,34 +37,20 @@ powercfg -setacvalueindex SCHEME_CURRENT SUB_SLEEP STANDBYIDLE 0
 powercfg -setacvalueindex SCHEME_CURRENT SUB_SLEEP HIBERNATEIDLE 0
 powercfg -setacvalueindex SCHEME_CURRENT SUB_SLEEP HYBRIDSLEEP 0
 
-:: Configuraciones DC (batería)
+:: DC (batería)
 powercfg -setdcvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 5
 powercfg -setdcvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMAX 99
 powercfg -setdcvalueindex SCHEME_CURRENT SUB_PCIEXPRESS ASPM 0
 powercfg -setdcvalueindex SCHEME_CURRENT SUB_USB USBSELECTIVE 0
 
-:: Activar y aplicar cambios
-powercfg -setactive SCHEME_CURRENT >nul 2>&1
-
-:: Cambiar nombre del plan activo
-echo Renombrando plan...
-powercfg -changename SCHEME_CURRENT "Xploit Optimizer (XPLT v1)" "Plan de energia de xploit optimizer (+FPS , 0-delay)" >nul 2>&1
-
-:: Mostrar configuración final
+:: Mostrar resultado
 echo.
 echo ====================================
-echo Configuracion aplicada correctamente
+echo Plan creado y optimizado con exito
 echo ====================================
 echo.
-echo Plan activo actual:
+echo Plan activo:
 powercfg -getactivescheme
-echo.
-echo === TODOS LOS PLANES AHORA ===
-powercfg -list
-echo.
-echo Configuraciones aplicadas:
-powercfg /q SCHEME_CURRENT | find "Xploit"
 
-echo.
-pause
+timeout /t 3 >nul
 exit
