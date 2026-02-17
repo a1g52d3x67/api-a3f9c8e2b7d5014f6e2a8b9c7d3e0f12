@@ -1,8 +1,8 @@
 @echo off
-setlocal EnableExtensions EnableDelayedExpansion
-title XPLOIT - MAXIMO RENDIMIENTO REAL
+setlocal EnableDelayedExpansion
+title XPLOIT - MAXIMO RENDIMIENTO SIMPLE
 
-:: Verificar administrador
+:: Verificar admin
 net session >nul 2>&1
 if %errorlevel% neq 0 (
     echo Ejecuta como Administrador.
@@ -10,71 +10,51 @@ if %errorlevel% neq 0 (
     exit /b
 )
 
-echo ==========================================
-echo    CREANDO MAXIMO RENDIMIENTO REAL
-echo ==========================================
-echo.
+echo Creando Maximo Rendimiento...
 
-:: Crear plan Ultimate Performance y capturar GUID
-for /f "tokens=3" %%G in ('powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61') do (
-    set "NEW_GUID=%%G"
+:: Crear plan y capturar linea completa
+for /f "delims=" %%A in ('powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61') do (
+    set "LINE=%%A"
 )
 
-if not defined NEW_GUID (
-    echo ERROR: No se pudo crear el plan.
-    powercfg -list
-    pause
-    exit /b
-)
+:: El GUID siempre son los ultimos 36 caracteres
+set "NEW_GUID=!LINE:~-36!"
 
-echo GUID creado: %NEW_GUID%
+echo GUID detectado: %NEW_GUID%
 echo.
 
-:: Activarlo
+:: Activar
 powercfg -setactive %NEW_GUID%
 
-:: CAMBIAR NOMBRE (AQUI ESTA LO QUE QUERIAS)
-powercfg -changename %NEW_GUID% "Xploit Maximo Rendimiento" "Plan extremo optimizado para gaming"
+:: Cambiar nombre
+powercfg -changename %NEW_GUID% "Xploit Maximo Rendimiento" "Plan extremo gaming"
 
-echo Nombre cambiado correctamente.
-echo.
-
-echo Aplicando configuraciones...
-
-:: CPU
+:: Aplicar cambios
 powercfg -setacvalueindex %NEW_GUID% SUB_PROCESSOR PROCTHROTTLEMIN 5
 powercfg -setacvalueindex %NEW_GUID% SUB_PROCESSOR PROCTHROTTLEMAX 99
 powercfg -setacvalueindex %NEW_GUID% SUB_PROCESSOR PERFBOOSTMODE 2
 powercfg -setacvalueindex %NEW_GUID% SUB_PROCESSOR SYSCOOLPOL 1
 powercfg -setacvalueindex %NEW_GUID% SUB_PROCESSOR IDLEDISABLE 1
 
-:: PCIe / USB / Disco
 powercfg -setacvalueindex %NEW_GUID% SUB_PCIEXPRESS ASPM 0
 powercfg -setacvalueindex %NEW_GUID% SUB_USB USBSELECTIVE 0
 powercfg -setacvalueindex %NEW_GUID% SUB_DISK DISKIDLE 0
-
-:: Red
 powercfg -setacvalueindex %NEW_GUID% SUB_NETPOWERSETTING NETWORKADAPTERPOWER 0
 
-:: Sleep
 powercfg -setacvalueindex %NEW_GUID% SUB_SLEEP STANDBYIDLE 0
 powercfg -setacvalueindex %NEW_GUID% SUB_SLEEP HIBERNATEIDLE 0
 powercfg -setacvalueindex %NEW_GUID% SUB_SLEEP HYBRIDSLEEP 0
 
-:: APLICAR DEFINITIVAMENTE
-powercfg -setactive %NEW_GUID%
+:: Forzar aplicacion real
+powercfg -S %NEW_GUID%
 
 echo.
-echo ==========================================
-echo  XPLOIT MAXIMO RENDIMIENTO APLICADO
-echo ==========================================
+echo ===============================
+echo PLAN ACTIVADO CORRECTAMENTE
+echo ===============================
 echo.
 
-echo Plan activo ahora:
 powercfg -getactivescheme
-echo.
-
-powercfg /q %NEW_GUID%
 
 pause
-exit /b
+exit
