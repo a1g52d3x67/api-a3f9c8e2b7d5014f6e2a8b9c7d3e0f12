@@ -1,73 +1,66 @@
-$UltimateGUID = "e9a42b02-d5df-448d-aa00-03f14749eb61"
+powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
+powercfg -setactive SCHEME_MIN
 
-# Crear plan basado en Ultimate Performance
-$output = powercfg -duplicatescheme $UltimateGUID 2>&1
+:: =========================
+:: CPU OPTIMIZACIÓN REAL
+:: =========================
 
-if ($output -match "([a-f0-9\-]{36})") {
-    $NewGUID = $matches[1]
+powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 5
+powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMAX 99
 
-    powercfg -changename $NewGUID "Xploit Optimizer (XPLT v3)" "Plan EXTREMO sin ahorro ni limites"
+:: Turbo agresivo
+powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTMODE 2
 
-    powercfg -setactive $NewGUID
+:: Cooling activo
+powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR SYSCOOLPOL 1
 
-    # ===============================
-    # CPU FULL PERFORMANCE
-    # ===============================
+:: Quitar idle profundo (menos stutter)
+powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR IDLEDISABLE 1
 
-    # Min y Max al 100% para evitar lock a 2.40
-    powercfg -setacvalueindex $NewGUID SUB_PROCESSOR PROCTHROTTLEMIN 100
-    powercfg -setacvalueindex $NewGUID SUB_PROCESSOR PROCTHROTTLEMAX 100
+:: Energy bias máximo rendimiento
+powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFENERGYBIAS 0
 
-    # Boost agresivo
-    powercfg -setacvalueindex $NewGUID SUB_PROCESSOR PERFBOOSTMODE 2
+:: Speed Shift EPP al mínimo (más rendimiento)
+powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFEPP 0
 
-    # Desactivar ahorro energético CPU
-    powercfg -setacvalueindex $NewGUID SUB_PROCESSOR IDLEDISABLE 1
-    powercfg -setacvalueindex $NewGUID SUB_PROCESSOR PERFENERGYBIAS 0
-    powercfg -setacvalueindex $NewGUID SUB_PROCESSOR PERFEPP 0
+:: Core parking OFF (si está disponible)
+powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR CPMINCORES 100
 
-    # Cooling activo
-    powercfg -setacvalueindex $NewGUID SUB_PROCESSOR SYSCOOLPOL 1
+:: =========================
+:: PCIe / GPU
+:: =========================
 
-    # ===============================
-    # PCIe / GPU
-    # ===============================
+powercfg -setacvalueindex SCHEME_CURRENT SUB_PCIEXPRESS ASPM 0
 
-    powercfg -setacvalueindex $NewGUID SUB_PCIEXPRESS ASPM 0
+:: =========================
+:: USB
+:: =========================
 
-    # ===============================
-    # USB
-    # ===============================
+powercfg -setacvalueindex SCHEME_CURRENT SUB_USB USBSELECTIVE 0
 
-    powercfg -setacvalueindex $NewGUID SUB_USB USBSELECTIVE 0
+:: =========================
+:: DISCO
+:: =========================
 
-    # ===============================
-    # DISCO
-    # ===============================
+powercfg -setacvalueindex SCHEME_CURRENT SUB_DISK DISKIDLE 0
 
-    powercfg -setacvalueindex $NewGUID SUB_DISK DISKIDLE 0
+:: =========================
+:: RED
+:: =========================
 
-    # ===============================
-    # RED
-    # ===============================
+powercfg -setacvalueindex SCHEME_CURRENT SUB_NETPOWERSETTING NETWORKADAPTERPOWER 0
 
-    powercfg -setacvalueindex $NewGUID SUB_NETPOWERSETTING NETWORKADAPTERPOWER 0
+:: =========================
+:: SLEEP OFF
+:: =========================
 
-    # ===============================
-    # SLEEP OFF
-    # ===============================
+powercfg -setacvalueindex SCHEME_CURRENT SUB_SLEEP STANDBYIDLE 0
+powercfg -setacvalueindex SCHEME_CURRENT SUB_SLEEP HIBERNATEIDLE 0
+powercfg -setacvalueindex SCHEME_CURRENT SUB_SLEEP HYBRIDSLEEP 0
 
-    powercfg -setacvalueindex $NewGUID SUB_SLEEP STANDBYIDLE 0
-    powercfg -setacvalueindex $NewGUID SUB_SLEEP HIBERNATEIDLE 0
-    powercfg -setacvalueindex $NewGUID SUB_SLEEP HYBRIDSLEEP 0
+:: =========================
+:: Aplicar
+:: =========================
 
-    # Aplicar
-    powercfg -S $NewGUID
-
-    Write-Host ""
-    Write-Host "Xploit Optimizer v3 ACTIVADO - CPU desbloqueada." -ForegroundColor Green
-}
-else {
-    Write-Host ""
-    Write-Host "Error creando plan." -ForegroundColor Red
-}
+powercfg -setactive SCHEME_CURRENT
+powercfg /q SCHEME_CURRENT
