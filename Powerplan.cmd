@@ -1,8 +1,8 @@
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
-title XPLOIT - MAXIMO RENDIMIENTO
+title XPLOIT - MAXIMO RENDIMIENTO REAL
 
-:: Verificar admin
+:: Verificar administrador
 net session >nul 2>&1
 if %errorlevel% neq 0 (
     echo Ejecuta como Administrador.
@@ -15,7 +15,7 @@ echo    CREANDO MAXIMO RENDIMIENTO REAL
 echo ==========================================
 echo.
 
-:: 1. Crear Ultimate Performance (Máximo rendimiento)
+:: Crear plan Ultimate Performance y capturar GUID
 for /f "tokens=3" %%G in ('powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61') do (
     set "NEW_GUID=%%G"
 )
@@ -30,37 +30,51 @@ if not defined NEW_GUID (
 echo GUID creado: %NEW_GUID%
 echo.
 
-:: 2. Activarlo
+:: Activarlo
 powercfg -setactive %NEW_GUID%
 
-:: 3. Aplicar configuraciones EXACTAS que pediste
-echo Aplicando tweaks...
+:: CAMBIAR NOMBRE (AQUI ESTA LO QUE QUERIAS)
+powercfg -changename %NEW_GUID% "Xploit Maximo Rendimiento" "Plan extremo optimizado para gaming"
 
-powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 5
-powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMAX 99
-powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTMODE 2
-powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR SYSCOOLPOL 1
-powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR IDLEDISABLE 1
+echo Nombre cambiado correctamente.
+echo.
 
-powercfg -setacvalueindex SCHEME_CURRENT SUB_PCIEXPRESS ASPM 0
-powercfg -setacvalueindex SCHEME_CURRENT SUB_USB USBSELECTIVE 0
-powercfg -setacvalueindex SCHEME_CURRENT SUB_DISK DISKIDLE 0
-powercfg -setacvalueindex SCHEME_CURRENT SUB_NETPOWERSETTING NETWORKADAPTERPOWER 0
+echo Aplicando configuraciones...
 
-powercfg -setacvalueindex SCHEME_CURRENT SUB_SLEEP STANDBYIDLE 0
-powercfg -setacvalueindex SCHEME_CURRENT SUB_SLEEP HIBERNATEIDLE 0
-powercfg -setacvalueindex SCHEME_CURRENT SUB_SLEEP HYBRIDSLEEP 0
+:: CPU
+powercfg -setacvalueindex %NEW_GUID% SUB_PROCESSOR PROCTHROTTLEMIN 5
+powercfg -setacvalueindex %NEW_GUID% SUB_PROCESSOR PROCTHROTTLEMAX 99
+powercfg -setacvalueindex %NEW_GUID% SUB_PROCESSOR PERFBOOSTMODE 2
+powercfg -setacvalueindex %NEW_GUID% SUB_PROCESSOR SYSCOOLPOL 1
+powercfg -setacvalueindex %NEW_GUID% SUB_PROCESSOR IDLEDISABLE 1
 
-:: 4. Reaplicar plan
-powercfg -setactive SCHEME_CURRENT
+:: PCIe / USB / Disco
+powercfg -setacvalueindex %NEW_GUID% SUB_PCIEXPRESS ASPM 0
+powercfg -setacvalueindex %NEW_GUID% SUB_USB USBSELECTIVE 0
+powercfg -setacvalueindex %NEW_GUID% SUB_DISK DISKIDLE 0
+
+:: Red
+powercfg -setacvalueindex %NEW_GUID% SUB_NETPOWERSETTING NETWORKADAPTERPOWER 0
+
+:: Sleep
+powercfg -setacvalueindex %NEW_GUID% SUB_SLEEP STANDBYIDLE 0
+powercfg -setacvalueindex %NEW_GUID% SUB_SLEEP HIBERNATEIDLE 0
+powercfg -setacvalueindex %NEW_GUID% SUB_SLEEP HYBRIDSLEEP 0
+
+:: APLICAR DEFINITIVAMENTE
+powercfg -setactive %NEW_GUID%
 
 echo.
 echo ==========================================
-echo   MAXIMO RENDIMIENTO ACTIVADO
+echo  XPLOIT MAXIMO RENDIMIENTO APLICADO
 echo ==========================================
 echo.
 
-powercfg /q SCHEME_CURRENT
+echo Plan activo ahora:
+powercfg -getactivescheme
+echo.
+
+powercfg /q %NEW_GUID%
 
 pause
 exit /b
