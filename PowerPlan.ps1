@@ -18,10 +18,8 @@ if ($output -match "([a-f0-9\-]{36})") {
 
     # Tweaks
     powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMIN 5
-    powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PROCTHROTTLEMAX 99
     powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR PERFBOOSTMODE 2
     powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR SYSCOOLPOL 1
-    powercfg -setacvalueindex SCHEME_CURRENT SUB_PROCESSOR IDLEDISABLE 1
 
     powercfg -setacvalueindex SCHEME_CURRENT SUB_PCIEXPRESS ASPM 0
     powercfg -setacvalueindex SCHEME_CURRENT SUB_USB USBSELECTIVE 0
