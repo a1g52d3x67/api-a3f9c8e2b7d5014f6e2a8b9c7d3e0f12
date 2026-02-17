@@ -14,3 +14,6 @@ powercfg -setacvalueindex SCHEME_CURRENT SUB_SLEEP HIBERNATEIDLE 0
 powercfg -setacvalueindex SCHEME_CURRENT SUB_SLEEP HYBRIDSLEEP 0
 powercfg -changename SCHEME_CURRENT "Xploit Optimizer (XPLT v1)"
 powercfg -setactive SCHEME_CURRENT
+
+cls
+exit
