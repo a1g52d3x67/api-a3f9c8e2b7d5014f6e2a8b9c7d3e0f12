@@ -1,4 +1,5 @@
 @echo off
+setlocal EnableExtensions
 title Xploit Optimizer - Ultimate Tweaks Edition
 color 9
 chcp 65001 >nul
@@ -6,60 +7,46 @@ chcp 65001 >nul
 :: ===== Verificar administrador =====
 net session >nul 2>&1
 if %errorlevel% neq 0 (
-    echo.
-    echo Ejecuta este archivo como ADMINISTRADOR.
-    pause
     exit
 )
 
-echo.
 echo ===============================
-echo     Xploit Optimizer v2
+echo        Xploit Optimizer
 echo ===============================
 echo.
 
-:: ===== Limpiar DNS =====
-echo Limpiando cache DNS...
-ipconfig /flushdns >nul
+:: ===== Limpiar cache DNS =====
+ipconfig /flushdns >nul 2>&1
 
-:: ===== Limpiar TEMP del usuario =====
-echo Limpiando archivos temporales del usuario...
+:: ===== TEMP Usuario =====
 for /d %%x in ("%TEMP%\*") do rd /s /q "%%x" 2>nul
-del /f /q "%TEMP%\*.*" 2>nul
+del /f /q "%TEMP%\*.*" >nul 2>&1
 
-:: ===== Limpiar TEMP del sistema =====
-echo Limpiando temporales del sistema...
+:: ===== TEMP Sistema =====
 for /d %%x in ("%SystemRoot%\Temp\*") do rd /s /q "%%x" 2>nul
-del /f /q "%SystemRoot%\Temp\*.*" 2>nul
+del /f /q "%SystemRoot%\Temp\*.*" >nul 2>&1
 
-:: ===== Limpiar cache de miniaturas =====
-echo Limpiando cache de miniaturas...
+:: ===== Cache miniaturas =====
 taskkill /f /im explorer.exe >nul 2>&1
-del /f /q "%LOCALAPPDATA%\Microsoft\Windows\Explorer\thumbcache_*.db" 2>nul
+del /f /q "%LOCALAPPDATA%\Microsoft\Windows\Explorer\thumbcache_*.db" >nul 2>&1
 start explorer.exe
 
 :: ===== Epic Games =====
-echo Limpiando cache de Epic Games...
-rd /s /q "%LOCALAPPDATA%\EpicGamesLauncher\Saved" 2>nul
-rd /s /q "%PROGRAMDATA%\Epic\EpicGamesLauncher\DataCache" 2>nul
+rd /s /q "%LOCALAPPDATA%\EpicGamesLauncher\Saved" >nul 2>&1
+rd /s /q "%PROGRAMDATA%\Epic\EpicGamesLauncher\DataCache" >nul 2>&1
 
 :: ===== Fortnite =====
-echo Limpiando logs de Fortnite...
-rd /s /q "%LOCALAPPDATA%\FortniteGame\Saved\Logs" 2>nul
-rd /s /q "%LOCALAPPDATA%\FortniteGame\Saved\Crashes" 2>nul
+rd /s /q "%LOCALAPPDATA%\FortniteGame\Saved\Logs" >nul 2>&1
+rd /s /q "%LOCALAPPDATA%\FortniteGame\Saved\Crashes" >nul 2>&1
 
 :: ===== Riot / Valorant =====
-echo Limpiando logs de Riot / Valorant...
-rd /s /q "%LOCALAPPDATA%\VALORANT\Saved\Logs" 2>nul
-rd /s /q "%LOCALAPPDATA%\VALORANT\Saved\Crashes" 2>nul
-rd /s /q "%LOCALAPPDATA%\Riot Games\Riot Client\Cache" 2>nul
+rd /s /q "%LOCALAPPDATA%\VALORANT\Saved\Logs" >nul 2>&1
+rd /s /q "%LOCALAPPDATA%\VALORANT\Saved\Crashes" >nul 2>&1
+rd /s /q "%LOCALAPPDATA%\Riot Games\Riot Client\Cache" >nul 2>&1
 
-:: ===== Vaciar papelera =====
-echo Vaciando papelera...
-PowerShell -NoProfile -Command "Clear-RecycleBin -Force" >nul 2>&1
+:: ===== Vaciar papelera (estable) =====
+PowerShell -NoProfile -ExecutionPolicy Bypass -Command "Clear-RecycleBin -Force" >nul 2>&1
 
-echo.
-echo Limpieza completada correctamente.
-echo.
-pause
+:: ===== Final =====
+timeout /t 2 >nul
 exit
